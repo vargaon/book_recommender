@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+
+  backend:
+    build:
+      context: ./backend
+    image: br-backend
+    container_name: br-backend
+    depends_on:
+      - mongo
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/data:/app/data
+      - /etc/localtime:/etc/localtime
+    ports:
+      - "8080:8080"
+    networks:
+      - network-backend
+    env_file:
+      - ./backend/.env
+    command: bash -c "poetry run uvicorn --host 0.0.0.0 src.main:create_app --factory --port 8000 --reload"
+
+  mongo:
+    image: mongo:5.0.17
+    container_name: br-mongo
+    ports:
+      - 27017:27017
+    networks:
+      - network-backend
+    volumes:
+      - ./mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+
+  chroma:
+    image: chromadb/chroma
+    container_name: br-chroma
+    ports:
+      - 8000:8000
+    networks:
+      - network-backend
+    volumes:
+      - ./chroma-data:/chroma/.chroma/index
+
+networks:
+  network-backend:
+
+
+volumes:
+  postgres-data:
+    external: true
+  mongo-data:
+    external: true
