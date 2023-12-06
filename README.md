@@ -29,4 +29,4 @@ Client-Server architektura.
 
 Server ukládá data o hodnocení a knížkách do mongo databáze a umožňuje komunikaci s frontendovou částí pomocí REST-API. Hlavní funkcionalitou je doporučování knížek podle jejich textového popisu.
 
-Client je implementován jako webové rozhraní pomocí REACT. Získává data z REST a umožňuje uživatelům snadněji interagovat s doporučovacím systémem. Uživatel může knížky vyhledávat pomocí atributů nebo textové query, vytvářet hodnocení a nechat si doporučit knížky podle již vytvořeného hodnocení.
+Client je implementován jako webové rozhraní pomocí REACT. Získává data z REST-API a umožňuje uživatelům snadněji interagovat s doporučovacím systémem. Uživatel může knížky vyhledávat pomocí atributů nebo textové query, vytvářet hodnocení a nechat si doporučit knížky podle již vytvořeného hodnocení.
