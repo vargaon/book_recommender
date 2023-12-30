@@ -1,25 +1,11 @@
-from datetime import datetime
-from typing import Annotated, Any
+from typing import Annotated
 
-from fastapi import APIRouter, Depends, Path, Query, Response
-from starlette.status import HTTP_204_NO_CONTENT
+from fastapi import APIRouter, Depends, Path, Query
 
+from ..dependencies import get_recommender, Recommender
 from ..schemas.recommendation import RecommendationSchema, RecommendationQueryParameters
-from ..schemas.http_exceptions import HTTPUnauthorizedExceptionSchema
 
 router = APIRouter()
-
-
-@router.get(
-    "/{recommendation_id}",
-    response_model=RecommendationSchema,
-    response_model_exclude_none=True,
-)
-async def get_recommendation_by_id(
-    recommendation_id: Annotated[str, Path(title="Recommendation identifier")],
-) -> RecommendationSchema:
-    """Get recommendation by identifier."""
-    pass
 
 
 @router.get(
@@ -30,9 +16,13 @@ async def get_recommendation_by_id(
 async def get_books_recommendation_to_user(
     user_id: Annotated[str, Path(title="User identifier")],
     parameters: Annotated[RecommendationQueryParameters, Depends()],
+    recommender: Annotated[Recommender, Depends(get_recommender)],
 ) -> RecommendationSchema:
     """Get recommendation of books to user."""
-    pass
+
+    return RecommendationSchema.model_validate(
+        {"recommendation": recommender.recommend_to_user(user_id, parameters.count)}
+    )
 
 
 @router.get(
@@ -43,9 +33,13 @@ async def get_books_recommendation_to_user(
 async def get_books_recommendation_to_book(
     book_id: Annotated[str, Path(title="Book identifier")],
     parameters: Annotated[RecommendationQueryParameters, Depends()],
+    recommender: Annotated[Recommender, Depends(get_recommender)],
 ) -> RecommendationSchema:
     """Get recommendation of books to book."""
-    pass
+
+    return RecommendationSchema.model_validate(
+        {"recommendation": recommender.recommend_to_book(book_id, parameters.count)}
+    )
 
 
 @router.get(
@@ -54,8 +48,12 @@ async def get_books_recommendation_to_book(
     response_model_exclude_none=True,
 )
 async def get_books_recommendation_to_query(
-    query: Annotated[str, Path(title="Query", max_length=512)],
+    query: Annotated[str, Query(title="Query", max_length=512)],
     parameters: Annotated[RecommendationQueryParameters, Depends()],
+    recommender: Annotated[Recommender, Depends(get_recommender)],
 ) -> RecommendationSchema:
     """Get recommendation of books to given query."""
-    pass
+
+    return RecommendationSchema.model_validate(
+        {"recommendation": recommender.recommend_to_query(query, parameters.count)}
+    )

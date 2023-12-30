@@ -9,6 +9,7 @@ services:
     container_name: br-backend
     depends_on:
       - mongo
+      - chroma
     volumes:
       - ./backend/src:/app/src
       - ./backend/data:/app/data
@@ -19,7 +20,7 @@ services:
       - network-backend
     env_file:
       - ./backend/.env
-    command: bash -c "poetry run uvicorn --host 0.0.0.0 src.main:create_app --factory --port 8000 --reload"
+    command: bash -c "poetry run uvicorn --host 0.0.0.0 src.main:create_app --factory --port 8080 --reload"
 
   mongo:
     image: mongo:5.0.17
@@ -42,7 +43,7 @@ services:
     networks:
       - network-backend
     volumes:
-      - ./chroma-data:/chroma/.chroma/index
+      - ./chroma-data:/chroma/chroma
 
 networks:
   network-backend:

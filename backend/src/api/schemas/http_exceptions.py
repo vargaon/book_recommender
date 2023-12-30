@@ -5,16 +5,21 @@ from pydantic import BaseModel, ConfigDict, Field
 class HTTPExceptionSchema(BaseModel):
     """Class to represent HTTP exception schema"""
 
-    detail: str = Field(
-        ..., title="Detail of exception", description="Text description of http exception"
-    )
+    detail: Annotated[
+        str,
+        Field(..., title="Detail of exception", description="Text description of http exception"),
+    ]
 
 
 class HTTPBadRequestExceptionSchema(HTTPExceptionSchema):
     """Class to represent HTTP bad request exception schema"""
 
-    name: str = Field(..., title="Name", description="Name of bad parameter from request")
-    value: str = Field(..., title="Value", description="Value of bad parameter from request")
+    name: Annotated[
+        str, Field(..., title="Name", description="Name of bad parameter from request")
+    ]
+    value: Annotated[
+        str, Field(..., title="Value", description="Value of bad parameter from request")
+    ]
 
     model_config = ConfigDict(
         extra="forbid",

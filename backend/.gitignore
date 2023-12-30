@@ -1,6 +1,6 @@
-data/
 gunicorn.conf.py
 notebooks/
+data/
 
 *.Identifier
 

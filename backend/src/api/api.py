@@ -1,12 +1,12 @@
 from fastapi import APIRouter
 
-from .endpoints import books, users, recommendation
+from .endpoints import books, ratings, recommendation
 
 
 router = APIRouter()
 base_routers: list[tuple[APIRouter, str, str]] = [
     (books.router, "/books", "Books"),
-    (users.router, "/users", "Users"),
+    (ratings.router, "/ratings", "Ratings"),
     (recommendation.router, "/recommendation", "Recommendation"),
 ]
 

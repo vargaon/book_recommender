@@ -16,30 +16,31 @@ pydantic = "^2.4.2"
 pydantic-settings = "^2.0.3"
 pymongo = "^4.6.0"
 chromadb = "^0.4.15"
-numpy = "^1.26.0"
 pandas = "^2.1.1"
+beautifulsoup4 = "^4.11.1"
+sentence_transformers = "^2.2.2"
 passlib = { version = "^1.7", extras = ["bcrypt"] }
 python-jose = { version = "^3.3.0", extras = ["cryptography"] }
 python-multipart = "^0.0.5"
 loguru = "^0.6.0"
-pandera = { version = "^0.17.0", extras = ["mypy"] }
-beautifulsoup4 = "^4.11.1"
 Sphinx = "^6.2.1"
 sphinx-rtd-theme = "^1.2.2"
 autodoc-pydantic = "^2.0.1"
 sphinx-click = "^4.4.0"
-tqdm = "^4.64.1"
 cryptography = "^38.0.4"
-torch = "^2.1.0"
-sentence-transformers = "^2.2.2"
+tqdm = "^4.66.1"
 
 [tool.poetry.dev-dependencies]
+pandas = "^2.1.1"
 pytest = "^7.4.2"
 black = "^23.9.1"
 isort = "^5.12.0"
 mypy = "^1.5.1"
 ipykernel = "^6.16.0"
 ipywidgets = "^8.0.2"
+
+[tool.poetry.scripts]
+init-db = "src.scripts.initialize_database:main"
 
 [tool.black]
 line-length = 99

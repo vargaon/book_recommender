@@ -1,18 +1,24 @@
 from typing import Annotated
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from fastapi import Query
 
-from .books import BookSchema
 from .base import BaseQueryParameters
 
 
 class BookRecommendationSchema(BaseModel):
-    item: Annotated[BookSchema, Field(title="Item")]
+    book_id: Annotated[str, Field(title="Book identifier")]
     score: Annotated[float, Field(title="Recommendation score")]
+
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_schema_extra={"example": {"book_id": "34", "score": 0.37}},
+    )
 
 
 class RecommendationSchema(BaseModel):
     recommendation: Annotated[list[BookRecommendationSchema], Field(title="Recommendation")]
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class RecommendationQueryParameters(BaseQueryParameters):

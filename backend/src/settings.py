@@ -8,6 +8,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     """Application settings"""
 
+    # Api
     BACKEND_CORS_ORIGINS: Annotated[
         list[AnyHttpUrl] | str,
         Field(title="Backend cors origins", description="Allowed CORS origins."),
@@ -23,6 +24,11 @@ class Settings(BaseSettings):
             return v
 
         raise ValueError(v)
+
+    # App
+    EMBEDDING_MODEL: Annotated[
+        str, Field(title="Model used for books description embedding")
+    ] = "all-MiniLM-L12-v2"
 
     # Mongo
     MONGO_HOST: Annotated[
@@ -43,6 +49,7 @@ class Settings(BaseSettings):
 
     MONGO_PORT: Annotated[int, Field(title="Mongo database port")] = 27017
 
+    # Chroma
     CHROMA_HOST: Annotated[
         str, Field(title="Chroma database host", description="Host address of chroma database")
     ] = "localhost"
