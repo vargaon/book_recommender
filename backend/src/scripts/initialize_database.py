@@ -96,6 +96,7 @@ def load_books() -> pd.DataFrame:
     not_in_books["book_id"] = list(range(max_book_id + 1, max_book_id + 1 + len(not_in_books)))
 
     result = pd.concat([books, not_in_books], ignore_index=True)
+    result["image_url"] = result["image_url"].fillna("")
 
     def str_to_list(value: str) -> list[str]:
         value = value.replace("'", "").replace("[", "").replace("]", "")
@@ -206,15 +207,15 @@ def main() -> None:
     )
     mongo_db = mongo_client["book_recommender"]
 
-    store_ratings(mongo_db, dataset["ratings"])
+    # store_ratings(mongo_db, dataset["ratings"])
     store_books(mongo_db, dataset["books"])
 
-    book_index = create_new_book_index(
-        chromadb.HttpClient(host=settings.CHROMA_HOST, port=settings.CHROMA_PORT),
-        settings.EMBEDDING_MODEL,
-    )
+    # book_index = create_new_book_index(
+    #     chromadb.HttpClient(host=settings.CHROMA_HOST, port=settings.CHROMA_PORT),
+    #     settings.EMBEDDING_MODEL,
+    # )
 
-    store_books_to_index(book_index, dataset["books"])
+    # store_books_to_index(book_index, dataset["books"])
 
 
 if __name__ == "__main__":

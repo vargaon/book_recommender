@@ -21,7 +21,11 @@ async def get_books_recommendation_to_user(
     """Get recommendation of books to user."""
 
     return RecommendationSchema.model_validate(
-        {"recommendation": recommender.recommend_to_user(user_id, parameters.count)}
+        {
+            "recommendation": recommender.recommend_to_user(
+                user_id, parameters.count, parameters.iter
+            )
+        }
     )
 
 
@@ -38,7 +42,11 @@ async def get_books_recommendation_to_book(
     """Get recommendation of books to book."""
 
     return RecommendationSchema.model_validate(
-        {"recommendation": recommender.recommend_to_book(book_id, parameters.count)}
+        {
+            "recommendation": recommender.recommend_to_book(
+                book_id, parameters.count, parameters.iter
+            )
+        }
     )
 
 
@@ -55,5 +63,9 @@ async def get_books_recommendation_to_query(
     """Get recommendation of books to given query."""
 
     return RecommendationSchema.model_validate(
-        {"recommendation": recommender.recommend_to_query(query, parameters.count)}
+        {
+            "recommendation": recommender.recommend_to_query(
+                query, parameters.count, parameters.iter
+            )
+        }
     )

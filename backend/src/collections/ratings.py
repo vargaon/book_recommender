@@ -46,7 +46,7 @@ class RatingsCollection:
     def insert(self, user_id: str, book_id: str, rating: int, timestamp: datetime) -> Rating:
         document = Rating(user_id=user_id, book_id=book_id, rating=rating, timestamp=timestamp)
 
-        self._collection.update_one(
+        self._collection.replace_one(
             {self.USER_ID_COL: user_id, self.BOOK_ID_COL: book_id}, document, upsert=True
         )
 

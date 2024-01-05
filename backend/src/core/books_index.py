@@ -22,11 +22,13 @@ class BooksIndex:
 
         return result["embeddings"]  # type: ignore
 
-    def get_similar_to_book(self, book_id: str, n: int) -> tuple[list[str], list[float]]:
+    def get_similar_to_book(
+        self, book_id: str, n: int, iter: int
+    ) -> tuple[list[str], list[float]]:
         if (embedding := self.get_book_embedding(book_id)) is None:
             return [], []
 
-        return self.get_similar_to_embedding(embedding, n)  # type: ignore
+        return self.get_similar_to_embedding(embedding, n, iter)  # type: ignore
 
     def get_similar_to_books(
         self, book_ids: list[str], n: int
@@ -36,16 +38,26 @@ class BooksIndex:
         return self.get_similar_to_embeddings(embeddings, n)
 
     def get_similar_to_embedding(
-        self, embedding: list[float], n: int
+        self, embedding: list[float], n: int, iter: int
     ) -> tuple[list[str], list[float]]:
-        result = self._collection.query(query_embeddings=embedding, n_results=n)
+        n_results = n * (iter + 1) + 1
 
-        return result["ids"][0][1:], result["distances"][0][1:]  # type: ignore
+        result = self._collection.query(query_embeddings=embedding, n_results=n_results)
 
-    def get_similar_to_query(self, query: str, n: int) -> tuple[list[str], list[float]]:
-        result = self._collection.query(query_texts=query, n_results=n)
+        from_index = (n * iter) + 1
+        to_index = from_index + n
 
-        return result["ids"][0][1:], result["distances"][0][1:]  # type: ignore
+        return result["ids"][0][from_index:to_index], result["distances"][0][from_index:to_index]  # type: ignore
+
+    def get_similar_to_query(self, query: str, n: int, iter: int) -> tuple[list[str], list[float]]:
+        n_results = n * (iter + 1)
+
+        result = self._collection.query(query_texts=query, n_results=n_results)
+
+        from_index = n * iter
+        to_index = from_index + n
+
+        return result["ids"][0][from_index:to_index], result["distances"][0][from_index:to_index]  # type: ignore
 
     def get_similar_to_embeddings(
         self, embeddings: list[list[float]], n: int

@@ -15,7 +15,7 @@ class Recommender:
         self._books_index = books_index
         self._ratings_collection = ratings_collection
 
-    def recommend_to_user(self, user_id: str, n: int) -> list[RecommendationRecord]:
+    def recommend_to_user(self, user_id: str, n: int, iter: int) -> list[RecommendationRecord]:
         ratings = self._ratings_collection.get_list(user_id=user_id)
 
         if not len(ratings) > 0:
@@ -23,7 +23,9 @@ class Recommender:
 
         user_book_ids = [r["book_id"] for r in ratings]
 
-        books_ids, _ = self._books_index.get_similar_to_books(user_book_ids, n)
+        to_rec = ((iter + 1) * n) + 100
+
+        books_ids, _ = self._books_index.get_similar_to_books(user_book_ids, to_rec)
 
         candidates: list[tuple[str, int]] = []
 
@@ -44,17 +46,22 @@ class Recommender:
             if id in res:
                 del res[id]
 
+        from_index = iter * n
+        to_index = from_index + n
+
         res = dict(sorted(res.items(), key=lambda x: -x[1]))
 
-        return self._get_recommendation(list(res.keys())[:n], list(res.values())[:n])
+        return self._get_recommendation(
+            list(res.keys())[from_index:to_index], list(res.values())[from_index:to_index]
+        )
 
-    def recommend_to_book(self, book_id: str, n: int) -> list[RecommendationRecord]:
-        similar_books = self._books_index.get_similar_to_book(book_id, n)
+    def recommend_to_book(self, book_id: str, n: int, iter: int) -> list[RecommendationRecord]:
+        similar_books = self._books_index.get_similar_to_book(book_id, n, iter)
 
         return self._get_recommendation(*similar_books)
 
-    def recommend_to_query(self, query: str, n: int) -> list[RecommendationRecord]:
-        similar_books = self._books_index.get_similar_to_query(query, n)
+    def recommend_to_query(self, query: str, n: int, iter: int) -> list[RecommendationRecord]:
+        similar_books = self._books_index.get_similar_to_query(query, n, iter)
 
         return self._get_recommendation(*similar_books)
 

@@ -27,7 +27,7 @@ class RecommendationQueryParameters(BaseQueryParameters):
     def __init__(
         self,
         count: int = Query(10, ge=1, title="Count"),
-        offset: int = Query(0, ge=0, title="Offset"),
+        iter: int = Query(0, ge=0, title="Iteration"),
     ) -> None:
         self.count = count
-        self.offset = offset
+        self.iter = iter
