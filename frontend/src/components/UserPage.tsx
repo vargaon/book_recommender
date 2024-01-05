@@ -9,11 +9,13 @@ import { Paper, IconButton, InputBase, Box } from "@mui/material"
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ClearIcon from '@mui/icons-material/Clear';
+import { CircularProgress } from "@mui/material";
 
 const UserPage = ({ userId, setUserId }: { userId: string; setUserId: (userId: string) => void }) => {
 
     const [books, setBooks] = useState<IBook[]>([]);
     const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(true);
 
     const pageSize = 12;
 
@@ -46,11 +48,15 @@ const UserPage = ({ userId, setUserId }: { userId: string; setUserId: (userId: s
                     console.log(err);
                     setBooks([]);
                 })
+                .finally(() => setLoading(false))
         } else {
             setBooks([]);
+            setLoading(false);
         }
 
     }, [userId, page]);
+
+    const content = (loading) ? <CircularProgress /> : <BooksGrid books={books} />;
 
     return (
         <Box display={"flex"} flexDirection={"column"} gap={2} p={2}>
@@ -70,7 +76,7 @@ const UserPage = ({ userId, setUserId }: { userId: string; setUserId: (userId: s
                     <ArrowForwardIosIcon />
                 </IconButton>
             </Paper>
-            <BooksGrid books={books} />
+            {content}
         </Box >
     )
 };

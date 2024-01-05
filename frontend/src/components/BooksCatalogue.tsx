@@ -69,15 +69,13 @@ const BooksCatalogue = ({ userId }: { userId: string }) => {
 
     }, [userId, search, page]);
 
-    if (loading) {
-        return <CircularProgress />;
-    }
+    const content = (loading) ? <CircularProgress /> : <BooksGrid books={books} />;
 
     return (
         <>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2, p: 2 }}>
                 <BooksSearchBar actualPage={page} setPage={setPage} searchByQuery={searchByQuery} setSearchByQuery={setSearchByQuery} setSearch={setSearch} nextPageDisabled={books.length < pageSize} />
-                <BooksGrid books={books} />
+                {content}
             </Box>
         </>
     );

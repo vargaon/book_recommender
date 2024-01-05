@@ -16,16 +16,19 @@ class Recommender:
         self._ratings_collection = ratings_collection
 
     def recommend_to_user(self, user_id: str, n: int, iter: int) -> list[RecommendationRecord]:
-        ratings = self._ratings_collection.get_list(user_id=user_id, ratings=[4, 5])
+        ratings = self._ratings_collection.get_list(user_id=user_id)
 
         if not len(ratings) > 0:
             return []
 
+        good_rated = [r for r in ratings if r["rating"] in [4, 5]]
+
         user_book_ids = [r["book_id"] for r in ratings]
+        good_rated_book_ids = [r["book_id"] for r in good_rated]
 
         to_rec = ((iter + 1) * n) + 100
 
-        books_ids, _ = self._books_index.get_similar_to_books(user_book_ids, to_rec)
+        books_ids, _ = self._books_index.get_similar_to_books(good_rated_book_ids, to_rec)
 
         candidates: list[tuple[str, int]] = []
 
@@ -35,7 +38,7 @@ class Recommender:
         res = {}
 
         for i, s in candidates:
-            if i in user_book_ids:
+            if i in good_rated_book_ids:
                 continue
             if i not in res:
                 res[i] = s

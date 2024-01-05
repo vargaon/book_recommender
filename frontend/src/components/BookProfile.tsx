@@ -8,6 +8,7 @@ import { getRecommendedBooksToBook } from "../api/RecommendationApi";
 import BooksGrid from "./BooksGrid";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { CircularProgress } from "@mui/material";
 
 export const loader = async ({ params }: any) => {
     return await getBook(params.bookId);
@@ -17,6 +18,7 @@ const BookProfile = ({ userId }: { userId: string }) => {
     const book = useLoaderData() as IBook;
     const [userRating, setUserRating] = useState(0);
     const [similarBooks, setSimilarBooks] = useState<IBook[]>([]);
+    const [loading, setLoading] = useState(true);
 
     const [page, setPage] = useState(1);
     const pageSize = 6;
@@ -69,7 +71,10 @@ const BookProfile = ({ userId }: { userId: string }) => {
                 console.log(err);
                 setSimilarBooks([]);
             })
+            .finally(() => setLoading(false))
     }, [book, page])
+
+    const content = (loading) ? <CircularProgress /> : <BooksGrid books={similarBooks} />;
 
     return (
         <>
@@ -112,7 +117,7 @@ const BookProfile = ({ userId }: { userId: string }) => {
                     }}>
                         <ArrowBackIosIcon />
                     </IconButton>
-                    <BooksGrid books={similarBooks} />
+                    {content}
                     <IconButton type="button" aria-label="next-page" onClick={handleNextPage} sx={{
                         ":hover": {
                             backgroundColor: "white"
