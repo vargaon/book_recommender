@@ -34,17 +34,21 @@ const UserPage = ({ userId, setUserId }: { userId: string; setUserId: (userId: s
     }
 
     useEffect(() => {
-        getUserRatings(userId, pageSize, (page - 1) * pageSize)
-            .then(async data => {
-                const promises = await data.map(async rat => getBook(rat.bookId));
-                const values = await Promise.all(promises);
+        if (userId) {
+            getUserRatings(userId, pageSize, (page - 1) * pageSize)
+                .then(async data => {
+                    const promises = await data.map(async rat => getBook(rat.bookId));
+                    const values = await Promise.all(promises);
 
-                setBooks(values);
-            })
-            .catch(err => {
-                console.log(err);
-                setBooks([]);
-            })
+                    setBooks(values);
+                })
+                .catch(err => {
+                    console.log(err);
+                    setBooks([]);
+                })
+        } else {
+            setBooks([]);
+        }
 
     }, [userId, page]);
 
