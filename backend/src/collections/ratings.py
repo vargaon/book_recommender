@@ -23,6 +23,7 @@ class RatingsCollection:
         self,
         user_id: str | None = None,
         book_id: str | None = None,
+        ratings: list[int] | None = None,
         limit: int | None = None,
         offset: int | None = None,
     ) -> list[Rating]:
@@ -32,6 +33,9 @@ class RatingsCollection:
             filter[self.USER_ID_COL] = user_id
         if book_id is not None:
             filter[self.BOOK_ID_COL] = book_id
+
+        if ratings is not None and len(ratings) > 0:
+            filter[self.RATING_COL] = {"$in": ratings}
 
         ratings = self._collection.find(filter=filter, projection={"_id": False})
 

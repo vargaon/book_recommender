@@ -16,7 +16,7 @@ class Recommender:
         self._ratings_collection = ratings_collection
 
     def recommend_to_user(self, user_id: str, n: int, iter: int) -> list[RecommendationRecord]:
-        ratings = self._ratings_collection.get_list(user_id=user_id)
+        ratings = self._ratings_collection.get_list(user_id=user_id, ratings=[4, 5])
 
         if not len(ratings) > 0:
             return []
