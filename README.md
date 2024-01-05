@@ -2,6 +2,18 @@
 
 Projekt pro doporučování knížek na základě textového popisu (obsah, krátký úryvek) a historie hodnocení.
 
+## Quick Start
+
+Build and run docker containers:
+```bash
+$ make up
+```
+Database initialization:
+```
+$ docker exec -it br-backend bash
+$ poetry run init-db
+```
+
 ## Funkce
 
 - vyhledání knížek za základě textové query
