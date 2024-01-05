@@ -14,6 +14,3 @@ RUN pip install poetry==1.7.0 && \
     poetry install --without dev --no-interaction --no-ansi
 
 COPY . ./
-
-CMD poetry run alembic upgrade head && \
-    poetry run gunicorn --config gunicorn.conf.py 'src.main:create_app()'

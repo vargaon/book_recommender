@@ -2,6 +2,22 @@ version: '3.8'
 
 services:
 
+  frontend:
+    build:
+      context: ./frontend
+    image: br-frontend
+    container_name: br-frontend
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend/src:/app/src
+      - /etc/localtime:/etc/localtime
+    ports:
+      - "3000:3000"
+    networks:
+      - network-backend
+    command: bash -c "yarn start"
+
   backend:
     build:
       context: ./backend
